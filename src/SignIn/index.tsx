@@ -1,16 +1,61 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TextInput, ImageBackground } from "react-native";
-import { FontAwesome } from '@expo/vector-icons'
-import LinearGradient from "react-native-linear-gradient";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TextInput, ImageBackground, Button } from "react-native";
+import { FontAwesome } from '@expo/vector-icons';
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../App';
+
+interface ExameResponse {
+    exames: {
+      nom_paciente: string;
+      num_cpf: string;
+      des_endereco: string;
+      des_email: string;
+    };
+  }
+  
+
+
+
 
 export default function SignIn() {
+
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const navigation = useNavigation();
+
+    function handleArea(e: React.FormEvent) {
+        e.preventDefault(); 
+        axios.post('http://localhost:3000/authenticate', { login: name, senha: password })
+        .then((response: AxiosResponse<ExameResponse>) => {
+            if (response.data.exames) {
+                navigation.navigate('Area', {
+                    nom_paciente: response.data.exames.nom_paciente,
+                    num_cpf: response.data.exames.num_cpf,
+                    des_endereco: response.data.exames.des_endereco,
+                    des_email: response.data.exames.des_email
+                  } as RootStackParamList['Area']);
+                  
+            } else {
+              alert('Login ou senha inválidos.');
+            }
+          })
+          
+            .catch(error => {
+                console.error('Erro na autenticação:', error);
+                alert('Erro na autenticação.');
+            });
+    }
+
+
     return(
         <View style={styles.container}>
-            <View style={styles.topImageContainer}>
+            <View>
             <Image source={require('../assets/topVector.png')} style={styles.topImage} />
             </View>
 
-            <View style={styles.saluContainer}>
+            <View>
                 <Text style={styles.saluText}>Salud</Text>
             </View>
 
@@ -20,12 +65,18 @@ export default function SignIn() {
 
             <View style={styles.inputContainer}>
             <FontAwesome name={"user"} size={24} color={"#9a9a9a"} style={styles.inputIcon} />
-            <TextInput placeholder="Usuario" style={styles.textInput} />
+            <TextInput 
+            value={name}
+            onChangeText={setName}
+            placeholder="Usuario" 
+            style={styles.textInput} />
             </View>
 
             <View style={styles.inputContainer}>
             <FontAwesome name={"lock"} size={24} color={"#9a9a9a"} style={styles.inputIcon} />
-            <TextInput 
+            <TextInput
+            value={password}
+            onChangeText={setPassword} 
             placeholder="Senha"
             style={styles.textInput}
             secureTextEntry
@@ -37,7 +88,7 @@ export default function SignIn() {
             </View>
 
             <View style={styles.signInButtonContainer}>
-            <Text style={styles.signIn}>Acessar</Text>
+            <Button title="Entrar" onPress={handleArea} />
             <View style={styles.signInIcon}>
                 <FontAwesome name={'arrow-right'} size={24} />
             </View>
@@ -113,7 +164,7 @@ const styles = StyleSheet.create({
     width: '90%'
     },
 
-    signIn: {
+    Button: {
         color: '#262626',
         fontSize: 25,
         fontWeight: 'bold'
