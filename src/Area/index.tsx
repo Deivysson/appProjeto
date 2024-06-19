@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 
-const img = require('../../../assets/imagens/micro.png');
+
 
 type AreaScreenRouteProp = RouteProp<RootStackParamList, 'Area'>;
 
@@ -13,7 +13,7 @@ interface AreaProps {
 
 
 export function Area({ route }: AreaProps) {
-    // Acessando os parâmetros via props (no React Native, geralmente são passados pela navegação)
+
     const { nom_paciente, num_cpf, des_email } = route.params;
 
     return (
@@ -24,10 +24,10 @@ export function Area({ route }: AreaProps) {
                     <Text>CPF: {num_cpf}</Text>
                     <Text>Email: {des_email}</Text>
                 </View>
-                <Image source={img} style={styles.logo} />
+               
             </View>
 
-            {/* No React Native, tabelas podem ser representadas usando Views e Texts */}
+ 
             <View style={styles.table}>
                 <View style={styles.row}>
                     <Text style={styles.cell}>Exames</Text>

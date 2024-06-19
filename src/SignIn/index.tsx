@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TextInput, ImageBackground, Button } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
-import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
-import { RouteProp } from '@react-navigation/native';
+import axios, {AxiosResponse} from "axios";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from '../../App';
 
 interface ExameResponse {
@@ -23,11 +22,10 @@ export default function SignIn() {
 
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-    function handleArea(e: React.FormEvent) {
-        e.preventDefault(); 
-        axios.post('http://localhost:3000/authenticate', { login: name, senha: password })
+    function handleArea() {
+        axios.post('http://172.16.12.3:3000/authenticate', { login: name, senha: password })
         .then((response: AxiosResponse<ExameResponse>) => {
             if (response.data.exames) {
                 navigation.navigate('Area', {
@@ -35,7 +33,7 @@ export default function SignIn() {
                     num_cpf: response.data.exames.num_cpf,
                     des_endereco: response.data.exames.des_endereco,
                     des_email: response.data.exames.des_email
-                  } as RootStackParamList['Area']);
+                  });
                   
             } else {
               alert('Login ou senha inválidos.');

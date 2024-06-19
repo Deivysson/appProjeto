@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import SignIn from './src/SignIn';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Area } from './src/Area';
+  import Area from './src/Area'
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -16,11 +15,6 @@ export type RootStackParamList = {
 };
 
 
-type RouteParams = {
-  nom_paciente?: string;
-  num_cpf?: string;
-  des_email?: string;
-};
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,7 +23,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false,}}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name='Area' component={Area} />
       </Stack.Navigator>
