@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import SignIn from './src/SignIn';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-  import Area from './src/Area'
+  import {Area} from './src/Area'
 
 export type RootStackParamList = {
   SignIn: undefined;

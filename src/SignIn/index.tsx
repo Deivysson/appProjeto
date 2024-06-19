@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput, ImageBackground, Button } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, ImageBackground, Button, ActivityIndicator } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import axios, {AxiosResponse} from "axios";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -22,11 +22,14 @@ export default function SignIn() {
 
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     function handleArea() {
+        setLoading(true);
         axios.post('http://172.16.12.3:3000/authenticate', { login: name, senha: password })
         .then((response: AxiosResponse<ExameResponse>) => {
+            setLoading(false);
             if (response.data.exames) {
                 navigation.navigate('Area', {
                     nom_paciente: response.data.exames.nom_paciente,
@@ -40,11 +43,21 @@ export default function SignIn() {
             }
           })
           
-            .catch(error => {
-                console.error('Erro na autenticação:', error);
-                alert('Erro na autenticação.');
-            });
-    }
+          .catch(error => {
+            setLoading(false);
+            console.error('Erro na autenticação:', error);
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+                console.error('Response status:', error.response.status);
+                console.error('Response headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('Request data:', error.request);
+            } else {
+                console.error('Error message:', error.message);
+            }
+            alert('Erro na autenticação.');
+        });
+}
 
 
     return(
@@ -86,7 +99,8 @@ export default function SignIn() {
             </View>
 
             <View style={styles.signInButtonContainer}>
-            <Button title="Entrar" onPress={handleArea} />
+            <Button title="Entrar" onPress={handleArea} disabled={loading} />
+            {loading && <ActivityIndicator size='large' color='#0000ff' />}
             <View style={styles.signInIcon}>
                 <FontAwesome name={'arrow-right'} size={24} />
             </View>
