@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput, ImageBackground, Button, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, ImageBackground, Button, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import axios, {AxiosResponse} from "axios";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from '../../App';
+
 
 interface ExameResponse {
     exames: {
@@ -27,7 +28,7 @@ export default function SignIn() {
 
     function handleArea() {
         setLoading(true);
-        axios.post('http://172.16.12.3:3000/authenticate', { login: name, senha: password })
+        axios.post('http://192.168.1.7:3000/authenticate', { login: name, senha: password })
         .then((response: AxiosResponse<ExameResponse>) => {
             setLoading(false);
             if (response.data.exames) {
@@ -61,6 +62,12 @@ export default function SignIn() {
 
 
     return(
+
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios"? "padding" : "height"}
+            style={{flex: 1}}
+        >
+
         <View style={styles.container}>
             <View>
             <Image source={require('../assets/topVector.png')} style={styles.topImage} />
@@ -111,7 +118,8 @@ export default function SignIn() {
             </View>
 
         </View>
-    )
+        </KeyboardAvoidingView>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -191,15 +199,18 @@ const styles = StyleSheet.create({
     },
 
     leftVectorContainer: {
-        position: 'absolute',
-        bottom: 0,
+        position: 'static',
+        bottom: -15,
         left: 0,
     },
 
     leftVectorImage: {
-        height:250,
-        width: 170
-    }
+        
+        bottom: 0,
+        left: 0,
+        width: 150, 
+        height: 200, 
+    },
 
 
    
